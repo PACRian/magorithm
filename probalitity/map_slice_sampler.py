@@ -56,6 +56,7 @@ class MapSlice:
     
 
     def sample(self, n=10):
+        self._deal_end()
         self._upcounts = n
         return np.array([p for p in self])
 
@@ -152,16 +153,13 @@ class MapSlice:
             p = np.array(p).ravel()
             assert p.size==2, "The format of initial point should be `(x0, y0)`"
             self._init_point = p
-            return
         elif isinstance(p, str):
             assert p in ('top', 'randpicker', 'midpoint', 'abovemean'), "Not valid input string"
-            p = lambda arr: versa(POINT_INITER[p](arr))
+            self._init_point = versa(POINT_INITER[p](self.marray))
         elif callable(p):
-            pass
+            self._init_point = p(self.marray)
         else: 
             raise ValueError("The initial point must be a callable object or two-dimensional array")
-        
-        self._init_point = p(self.marray)
 
     def _int_rand(self):
         x = self.cpt
@@ -172,7 +170,7 @@ class MapSlice:
         u = npr.rand()*self.mapfunc(p0[1], p0[0])
 
         if self.ubound is not None:
-            u = min(max(u, self.ubound[0]), self.ubound[1])
+            u = min(max(u, self.ubound[0]), self.ubound[1]).item()
         return u
 
     def _shrink_rand(self, u, p0, fixed='x'):
