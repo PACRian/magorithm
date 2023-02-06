@@ -13,13 +13,34 @@ Python version `>3.7.0` tested, following libraries are required:
 pip install numpy, matplotlib, jupyter, ipykernel
 ```
 
-## Demo
-To run the demos, interact with the notebook `begin.ipynb` which contains six experiments about different sampling methods
+## Demos
+1. Sample methods
+
+Interact with the notebook [`begin.ipynb`](https://github.com/PACRian/magorithm/blob/master/probalitity/begin.ipynb) which contains six experiments about different sampling methods
 ```bash
 jupyter notebook begin.ipynb
 ```
-Or, carry out another development via packages provided in the `samplers.py`, for example:
+Or, carry out another development via packages provided in the [`samplers.py`](https://github.com/PACRian/magorithm/blob/master/probalitity/samplers.py), for example:
 ```python
 from samplers import gen_gibbs_sample
 ```
+2. Map-array slice sampler
+
+A slice sample methods implementation based on 2-dimensional gird in the file [`map_slice_sampler.py`](https://github.com/PACRian/magorithm/blob/master/probalitity/map_slice_sampler.py). Below is an example showing how `MapSlice` works
+```python
+# Generate example array
+img = npr.random((10, 12))
+plt.imshow(img)
+
+# Mutiple choices to estabilish one slicer
+# Check the `__init__` method documentation for more
+slicer = MapSlice(img, ubound=[img.mean(), np.inf], do_subpixel=True)
+
+# Do one sequential slice sampling
+# Ignoring the proposal variables
+samples = slicer.sample()[:, :-1]   
+
+#TODO: Plot display
+```
+
 
